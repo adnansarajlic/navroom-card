@@ -62,13 +62,15 @@ const RK_DEFAULTS = {
   badge_size: 18,
   bg_tint: 0.10,
   accent_fallback: '255,183,77',
+  accent_color: '',
+  accent_border: '',
 };
 
 const RK_DESIGN_KEYS = [
   'height', 'radius', 'padding', 'head_height', 'row_gap', 'icon_size',
   'name_size', 'name_weight', 'chip_height', 'chip_font', 'chip_pad',
   'chip_gap', 'pwr_size', 'pwr_icon', 'badge_size', 'bg_tint',
-  'accent_fallback', 'chip_order',
+  'accent_fallback', 'accent_color', 'accent_border', 'chip_order',
 ];
 const RK_VARIANTS = ['badge', 'chip', 'pur', 'compact'];
 const RK_CHIP_ORDER_DEFAULT = ['temp', 'humidity', 'co2', 'light'];
@@ -97,6 +99,8 @@ const RK_I18N = {
     power_action: 'Power button: tap',
     name: 'Override name',
     icon: 'Override icon',
+    accent_color: 'Override accent color',
+    accent_border: 'Left accent border color',
     height: 'Card height',
     radius: 'Corner radius',
     icon_size: 'Icon size',
@@ -141,6 +145,8 @@ const RK_I18N = {
     power_action: 'Power-Button: Tippen',
     name: 'Name überschreiben',
     icon: 'Icon überschreiben',
+    accent_color: 'Akzentfarbe überschreiben',
+    accent_border: 'Farbe des linken Akzentstreifens',
     height: 'Kartenhöhe',
     radius: 'Eckenradius',
     icon_size: 'Icongröße',
@@ -185,6 +191,8 @@ const RK_I18N = {
     power_action: 'Strömknapp: Tryck',
     name: 'Åsidosätt namn',
     icon: 'Åsidosätt ikon',
+    accent_color: 'Åsidosätt accentfärg',
+    accent_border: 'Vänster accentlinjefärg',
     height: 'Korthöjd',
     radius: 'Hörnradie',
     icon_size: 'Ikonstorlek',
@@ -229,6 +237,8 @@ const RK_I18N = {
     power_action: 'Tænd/sluk-knap: Tryk',
     name: 'Tilsidesæt navn',
     icon: 'Tilsidesæt ikon',
+    accent_color: 'Tilsidesæt accentfarve',
+    accent_border: 'Venstre accentstribefarve',
     height: 'Korthøjde',
     radius: 'Hjørneradius',
     icon_size: 'Ikonstørrelse',
@@ -254,7 +264,7 @@ const RK_I18N = {
     one_light: '1 lys',
     n_lights: '{n} lys',
     error_area: 'Vælg venligst et område eller indtast et navn.',
-    card_description: 'Rumoversigt med auto-discovery pr. område, lysfarve-accent, konfigurerbar tænd/sluk-knap, sorterbare sensor-chips og layoutvarianter.',
+    card_description: 'Rumoversigt med auto-discovery pr. område, lysfarve-accent, konfigurerbar tænd/sluk-knap, sorterbare sensor-chips och layoutvarianter.',
   },
   no: {
     area: 'Område',
@@ -273,6 +283,8 @@ const RK_I18N = {
     power_action: 'Strømknapp: Trykk',
     name: 'Overstyr navn',
     icon: 'Overstyr ikon',
+    accent_color: 'Overstyr aksentfarge',
+    accent_border: 'Venstre aksentlinjefarge',
     height: 'Korthøyde',
     radius: 'Hjørneradius',
     icon_size: 'Ikonstørrelse',
@@ -298,7 +310,7 @@ const RK_I18N = {
     one_light: '1 lys',
     n_lights: '{n} lys',
     error_area: 'Vennligst velg et område eller oppgi et navn.',
-    card_description: 'Romoverblikk med auto-discovery per område, lysfarge-aksent, konfigurerbar strømknapp, sorterbare sensor-chips og layoutvarianter.',
+    card_description: 'Romoverblikk med auto-discovery per område, lysfarge-aksent, konfigurerbar strømknapp, sorterbare sensor-chips och layoutvarianter.',
   },
   fi: {
     area: 'Alue',
@@ -317,6 +329,8 @@ const RK_I18N = {
     power_action: 'Virtapainike: Napauta',
     name: 'Korvaa nimi',
     icon: 'Korvaa kuvake',
+    accent_color: 'Ohita korostusväri',
+    accent_border: 'Vasemman korostusviivan väri',
     height: 'Kortin korkeus',
     radius: 'Kulman säde',
     icon_size: 'Kuvakekoko',
@@ -361,6 +375,8 @@ const RK_I18N = {
     power_action: 'Aflhnappur: Ýta',
     name: 'Hnekkja nafni',
     icon: 'Hnekkja tákni',
+    accent_color: 'Hnekkja áherslulit',
+    accent_border: 'Litur vinstri áherslustiku',
     height: 'Hæð spjalds',
     radius: 'Hornaradíus',
     icon_size: 'Táknstærð',
@@ -401,6 +417,34 @@ function rkLang(hass) {
 function rkT(hass, key) {
   const lang = rkLang(hass);
   return (RK_I18N[lang] && RK_I18N[lang][key]) || RK_I18N.en[key] || key;
+}
+
+function rkParseColor(val) {
+  if (!val || typeof val !== 'string') return null;
+  val = val.trim();
+  if (!val) return null;
+  if (/^\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}$/.test(val)) {
+    return val.split(',').map((n) => parseInt(n.trim(), 10)).join(',');
+  }
+  const rgbMatch = val.match(/rgba?\((\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
+  if (rgbMatch) {
+    return `${rgbMatch[1]},${rgbMatch[2]},${rgbMatch[3]}`;
+  }
+  if (val.startsWith('#')) {
+    let hex = val.slice(1);
+    if (hex.length === 3) {
+      hex = hex.split('').map((c) => c + c).join('');
+    }
+    if (hex.length === 6) {
+      const r = parseInt(hex.slice(0, 2), 16);
+      const g = parseInt(hex.slice(2, 4), 16);
+      const b = parseInt(hex.slice(4, 6), 16);
+      if (!isNaN(r) && !isNaN(g) && !isNaN(b)) {
+        return `${r},${g},${b}`;
+      }
+    }
+  }
+  return null;
 }
 
 /* -------------------- Auto-discovery (shared) -------------------- */
@@ -744,7 +788,7 @@ class NavRoomCard extends HTMLElement {
           flex-direction: row;
           align-items: center;
           justify-content: space-between;
-          border-left: 4px solid rgb(var(--rk-accent));
+          border-left: 4px solid rgb(var(--rk-border-accent, var(--rk-accent)));
         }
         ha-card.variant-compact .head {
           display: flex;
@@ -909,11 +953,8 @@ class NavRoomCard extends HTMLElement {
       } else {
         lastTap = now;
         setTimeout(() => {
-          if (lastTap && Date.now() - lastTap >= RK_DBL_MS) {
-            lastTap = 0;
-            this._handleAction('tap');
-          }
-        }, RK_DBL_MS + 10);
+          if (lastTap === now) this._handleAction('tap');
+        }, RK_DBL_MS);
       }
     });
   }
@@ -987,7 +1028,7 @@ class NavRoomCard extends HTMLElement {
     el.name.textContent = c.name || (area && area.name) || c.area || '';
     el.ic.setAttribute('icon', c.icon || (area && area.icon) || 'mdi:home-outline');
 
-    // Light state & accent color (average of RGB colors of lights that are on)
+    // Light state & accent color (average of RGB colors of lights that are on, or manual override)
     const light = eff.light ? hass.states[eff.light] : null;
     const on = !!(light && light.state === 'on');
     let count = 0;
@@ -1012,12 +1053,23 @@ class NavRoomCard extends HTMLElement {
       }
     }
     let accent = c.accent_fallback;
-    if (cols.length) {
+    const customAccent = c.accent_color ? rkParseColor(c.accent_color) : null;
+    if (customAccent) {
+      accent = customAccent;
+    } else if (cols.length) {
       accent = [0, 1, 2]
         .map((i) => Math.round(cols.reduce((a, x) => a + x[i], 0) / cols.length))
         .join(',');
     }
     el.card.style.setProperty('--rk-accent', accent);
+
+    const customBorder = c.accent_border ? rkParseColor(c.accent_border) : null;
+    if (customBorder) {
+      el.card.style.setProperty('--rk-border-accent', customBorder);
+    } else {
+      el.card.style.removeProperty('--rk-border-accent');
+    }
+
     el.card.className = 'variant-' + c.variant;
     el.card.classList.toggle('on', on);
 
@@ -1139,6 +1191,8 @@ function rkBuildSchema(hass) {
           schema: [
             { name: 'name', selector: { text: {} } },
             { name: 'icon', selector: { icon: {} } },
+            { name: 'accent_color', selector: { text: {} } },
+            { name: 'accent_border', selector: { text: {} } },
           ],
         },
       ],
