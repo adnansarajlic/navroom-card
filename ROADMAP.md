@@ -16,15 +16,15 @@ This document tracks planned features, community requests, and future architectu
 
 ---
 
-### 2. 📱 Compact / Slim Row Layout (`layout: 'compact'`)
-* **Goal:** Provide an ultra-clean horizontal row layout (~55–65px height) as an alternative to the standard vertical grid card (130px), specifically optimized for mobile dashboards and dense room listings.
+### 2. 🚨 Smoke Detector & Safety Sensor Integration (`smoke`)
+* **Goal:** Native support for smoke, fire, gas, and heat sensors (`binary_sensor` with `device_class: 'smoke' / 'gas' / 'heat'`).
 * **Design & Structure:**
-  - **Left Section:** Colored accent indicator (`border-left` glow), circular room icon container with overlay status badge (lights on count or state).
-  - **Middle Section:** Room name in bold typography with a compact horizontal subline for sensor values (`25.6 °C • 47 % • CO2`).
-  - **Right Section:** Compact power button toggle or room navigation chevron.
-* **Configuration:** Added as `layout: 'compact'` (or `variant: 'compact'`) in YAML and full visual UI editor support.
-* **Priority:** Medium / Major Feature
-* **Status:** 💡 Concept & Design Analysis Complete
+  - **Auto-Discovery:** Automatically scans and detects safety binary sensors within the room's area.
+  - **Visual Editor Support:** Dedicated entity selector for smoke sensors and sortable chip order integration.
+  - **Normal State:** Subtle status chip with `mdi:smoke-detector-variant` and localized `OK` indicator.
+  - **Alert State:** High-visibility emergency alert chip (`class="chip alert"` with pulsing red warning) featuring `mdi:fire-alert` and localized warning text (`Smoke!` / `Brand!`).
+* **Priority:** High (Safety Feature)
+* **Status:** 📝 Specified & Ready for implementation
 
 ---
 
@@ -47,6 +47,7 @@ This document tracks planned features, community requests, and future architectu
 ---
 
 ## 📋 Completed Milestones
+- [x] **v2.3.1:** Compact horizontal row layout variant (`variant: compact`) with space-efficient flex row design, left border accent, and mobile optimization.
 - [x] **v2.3.0:** Native localization for Nordic languages (Swedish, Danish, Norwegian, Finnish, Icelandic) and enhanced locale normalization.
 - [x] **v2.2.0:** Auto-discovery pre-fill in the visual editor.
 - [x] **v2.0.0:** Area discovery, layout variants (`badge`, `chip`, `pur`), and dynamic RGB light color tinting.
