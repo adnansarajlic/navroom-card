@@ -560,10 +560,10 @@ class NavRoomCard extends HTMLElement {
       ? `${c.radius}px`
       : 'var(--ha-card-border-radius, 12px)';
     const cardHeight = isCompact
-      ? (this._userKeys.has('height') ? `${c.height}px` : '58px')
+      ? (this._userKeys.has('height') && c.height !== 130 ? `${c.height}px` : '58px')
       : `${c.height}px`;
     const cardPad = isCompact
-      ? (this._userKeys.has('padding') ? `${c.padding}px` : '8px 14px 8px 12px')
+      ? (this._userKeys.has('padding') && c.padding !== 12 ? `${c.padding}px` : '8px 14px 8px 12px')
       : `${c.padding}px`;
 
     this.shadowRoot.innerHTML = `
@@ -593,31 +593,31 @@ class NavRoomCard extends HTMLElement {
         }
 
         /* --- Standard Grid Elements --- */
-        ha-card:not(.compact) {
+        ha-card:not(.variant-compact) {
           display: grid;
           grid-template-columns: 1fr auto;
           grid-template-rows: ${c.head_height}px 1fr auto;
           row-gap: ${c.row_gap}px;
         }
-        ha-card:not(.compact) .head {
+        ha-card:not(.variant-compact) .head {
           grid-column: 1;
           grid-row: 1;
           display: flex;
           align-items: center;
           justify-content: flex-start;
         }
-        ha-card:not(.compact) #pwr {
+        ha-card:not(.variant-compact) #pwr {
           grid-column: 2;
           grid-row: 1;
           align-self: center;
           justify-self: end;
         }
-        ha-card:not(.compact) .info-wrap {
+        ha-card:not(.variant-compact) .info-wrap {
           grid-column: 1 / span 2;
           grid-row: 2 / span 2;
           display: contents;
         }
-        ha-card:not(.compact) #name {
+        ha-card:not(.variant-compact) #name {
           grid-column: 1 / span 2;
           grid-row: 2;
           align-self: end;
@@ -629,7 +629,7 @@ class NavRoomCard extends HTMLElement {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        ha-card:not(.compact) #chips {
+        ha-card:not(.variant-compact) #chips {
           grid-column: 1 / span 2;
           grid-row: 3;
           display: flex;
@@ -704,7 +704,7 @@ class NavRoomCard extends HTMLElement {
         #badge.show { display: flex; }
 
         #chips::-webkit-scrollbar { display: none; }
-        .chip {
+        #chips .chip {
           flex: 0 0 auto;
           display: inline-flex;
           align-items: center;
@@ -721,52 +721,52 @@ class NavRoomCard extends HTMLElement {
           transition: all .25s ease;
           white-space: nowrap;
         }
-        .chip ha-icon {
+        #chips .chip ha-icon {
           --mdc-icon-size: ${chipIcon}px;
           margin-left: -2px;
         }
-        .chip.hot {
+        #chips .chip.hot {
           color: rgb(var(--rk-accent));
           background: rgba(var(--rk-accent), 0.16);
         }
-        .chip.warn {
+        #chips .chip.warn {
           color: #ffb74d;
           background: rgba(255, 183, 77, 0.16);
         }
-        .chip.alert {
+        #chips .chip.alert {
           color: #ff7043;
           background: rgba(255, 112, 67, 0.18);
         }
 
         /* --- Compact Variant (Horizontal Row Layout) --- */
-        ha-card.compact {
+        ha-card.variant-compact {
           display: flex;
           flex-direction: row;
           align-items: center;
           justify-content: space-between;
           border-left: 4px solid rgb(var(--rk-accent));
         }
-        ha-card.compact .head {
+        ha-card.variant-compact .head {
           display: flex;
           align-items: center;
           justify-content: center;
           flex: 0 0 auto;
           margin-right: 12px;
         }
-        ha-card.compact .ic-wrap {
+        ha-card.variant-compact .ic-wrap {
           width: 38px;
           height: 38px;
           border-radius: 50%;
           background: var(--rk-neutral);
           transition: background .25s ease;
         }
-        ha-card.compact.on .ic-wrap {
+        ha-card.variant-compact.on .ic-wrap {
           background: rgba(var(--rk-accent), 0.16);
         }
-        ha-card.compact #ic {
+        ha-card.variant-compact #ic {
           --mdc-icon-size: 20px;
         }
-        ha-card.compact .info-wrap {
+        ha-card.variant-compact .info-wrap {
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -774,7 +774,7 @@ class NavRoomCard extends HTMLElement {
           min-width: 0;
           gap: 2px;
         }
-        ha-card.compact #name {
+        ha-card.variant-compact #name {
           align-self: flex-start;
           font-size: ${this._userKeys.has('name_size') ? c.name_size : 15}px;
           font-weight: ${c.name_weight};
@@ -785,7 +785,7 @@ class NavRoomCard extends HTMLElement {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        ha-card.compact #chips {
+        ha-card.variant-compact #chips {
           display: flex;
           align-items: center;
           min-height: auto;
@@ -796,7 +796,7 @@ class NavRoomCard extends HTMLElement {
           overflow-y: hidden;
           scrollbar-width: none;
         }
-        ha-card.compact .chip {
+        ha-card.variant-compact #chips .chip {
           height: 18px;
           padding: 0;
           font-size: 11px;
@@ -805,25 +805,25 @@ class NavRoomCard extends HTMLElement {
           background: transparent;
           color: var(--secondary-text-color);
         }
-        ha-card.compact .chip:not(:last-child)::after {
+        ha-card.variant-compact #chips .chip:not(:last-child)::after {
           content: "•";
           margin-left: 6px;
           color: var(--disabled-text-color, rgba(128,128,128,0.5));
         }
-        ha-card.compact .chip ha-icon {
+        ha-card.variant-compact #chips .chip ha-icon {
           --mdc-icon-size: 13px;
           margin-left: 0;
         }
-        ha-card.compact #pwr {
+        ha-card.variant-compact #pwr {
           flex: 0 0 auto;
           margin-left: 10px;
           width: ${this._userKeys.has('pwr_size') ? c.pwr_size : 34}px;
           height: ${this._userKeys.has('pwr_size') ? c.pwr_size : 34}px;
         }
-        ha-card.compact #pwr ha-icon {
+        ha-card.variant-compact #pwr ha-icon {
           --mdc-icon-size: ${this._userKeys.has('pwr_icon') ? c.pwr_icon : 18}px;
         }
-        ha-card.compact #badge {
+        ha-card.variant-compact #badge {
           top: -3px;
           right: -3px;
           min-width: 16px;
@@ -832,10 +832,10 @@ class NavRoomCard extends HTMLElement {
         }
 
         @media (prefers-reduced-motion: reduce) {
-          ha-card, #pwr, #ic, .chip { transition: none; }
+          ha-card, #pwr, #ic, #chips .chip { transition: none; }
         }
       </style>
-      <ha-card class="${c.variant}">
+      <ha-card class="variant-${c.variant}">
         <div class="head">
           <div class="ic-wrap">
             <ha-icon id="ic"></ha-icon>
@@ -1018,6 +1018,7 @@ class NavRoomCard extends HTMLElement {
         .join(',');
     }
     el.card.style.setProperty('--rk-accent', accent);
+    el.card.className = 'variant-' + c.variant;
     el.card.classList.toggle('on', on);
 
     // Power button & badge (badge in "badge" and "compact" variants)
