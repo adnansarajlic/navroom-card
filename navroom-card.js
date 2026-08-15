@@ -1,7 +1,11 @@
 /**
- * NavRoom Card – Custom Lovelace Card (v2.3.1)
+ * NavRoom Card – Custom Lovelace Card (v2.3.2)
  * Room overview card with area icon, light-color accent, power button,
  * sortable sensor chips (temperature, humidity, CO2) and layout variants.
+ *
+ * v2.3.2:
+ *  - Added manual color override support for `accent_color` and `accent_border`.
+ *  - Fixed CSS class collision when card variant was set to `chip`.
  *
  * v2.3.1:
  *  - Added new compact horizontal row layout variant (`variant: compact`).
@@ -41,7 +45,7 @@
  * https://github.com/smarthomebutbetter/navroom-card
  */
 
-const RK_VERSION = '2.3.1';
+const RK_VERSION = '2.3.2';
 
 const RK_DEFAULTS = {
   variant: 'badge',
