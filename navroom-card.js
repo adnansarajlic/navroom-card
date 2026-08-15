@@ -67,8 +67,7 @@ const RK_DESIGN_KEYS = [
   'chip_gap', 'pwr_size', 'pwr_icon', 'badge_size', 'bg_tint',
   'accent_fallback', 'chip_order',
 ];
-
-const RK_VARIANTS = ['badge', 'chip', 'pur'];
+const RK_VARIANTS = ['badge', 'chip', 'pur', 'compact'];
 const RK_CHIP_ORDER_DEFAULT = ['temp', 'humidity', 'co2', 'light'];
 const RK_HOLD_MS = 500;
 const RK_DBL_MS = 250;
@@ -88,6 +87,7 @@ const RK_I18N = {
     variant_badge: 'Counter badge on power button',
     variant_chip: 'Lights chip in status row',
     variant_pur: 'Plain – no counter',
+    variant_compact: 'Compact – horizontal row',
     tap_action: 'Card: tap',
     hold_action: 'Card: hold',
     double_tap_action: 'Card: double tap',
@@ -119,7 +119,7 @@ const RK_I18N = {
     one_light: '1 light',
     n_lights: '{n} lights',
     error_area: 'Please select an area or set a name.',
-    card_description: 'Room overview with auto-discovery per area, light-color accent, configurable power button, sortable sensor chips and three layout variants.',
+    card_description: 'Room overview with auto-discovery per area, light-color accent, configurable power button, sortable sensor chips and layout variants.',
   },
   de: {
     area: 'Bereich',
@@ -131,6 +131,7 @@ const RK_I18N = {
     variant_badge: 'Zähler-Badge am Power-Button',
     variant_chip: 'Lichter-Chip in der Statuszeile',
     variant_pur: 'Pur – ohne Zähler',
+    variant_compact: 'Kompakt – horizontale Zeile',
     tap_action: 'Karte: Tippen',
     hold_action: 'Karte: Halten',
     double_tap_action: 'Karte: Doppeltippen',
@@ -162,7 +163,7 @@ const RK_I18N = {
     one_light: '1 Licht',
     n_lights: '{n} Lichter',
     error_area: 'Bitte einen Bereich wählen oder einen Namen setzen.',
-    card_description: 'Raumübersicht mit Auto-Discovery pro Bereich, Lichtfarben-Akzent, konfigurierbarem Power-Button, sortierbaren Sensor-Chips und drei Layout-Varianten.',
+    card_description: 'Raumübersicht mit Auto-Discovery pro Bereich, Lichtfarben-Akzent, konfigurierbarem Power-Button, sortierbaren Sensor-Chips und Layout-Varianten.',
   },
   sv: {
     area: 'Område',
@@ -174,6 +175,7 @@ const RK_I18N = {
     variant_badge: 'Räknar-badge på strömknapp',
     variant_chip: 'Lamp-chip i statusraden',
     variant_pur: 'Stilren – utan räknare',
+    variant_compact: 'Kompakt – horisontell rad',
     tap_action: 'Kort: Tryck',
     hold_action: 'Kort: Håll ned',
     double_tap_action: 'Kort: Dubbeltryck',
@@ -205,7 +207,7 @@ const RK_I18N = {
     one_light: '1 lampa',
     n_lights: '{n} lampor',
     error_area: 'Vänligen välj ett område eller ange ett namn.',
-    card_description: 'Rumsöversikt med auto-discovery per område, ljusfärgsaccent, anpassningsbar strömknapp, sorterbara sensor-chips och tre layoutvarianter.',
+    card_description: 'Rumsöversikt med auto-discovery per område, ljusfärgsaccent, anpassningsbar strömknapp, sorterbara sensor-chips och layoutvarianter.',
   },
   da: {
     area: 'Område',
@@ -217,6 +219,7 @@ const RK_I18N = {
     variant_badge: 'Tæller-badge på tænd/sluk-knap',
     variant_chip: 'Lys-chip i statusrækken',
     variant_pur: 'Enkel – uden tæller',
+    variant_compact: 'Kompakt – vandret række',
     tap_action: 'Kort: Tryk',
     hold_action: 'Kort: Hold',
     double_tap_action: 'Kort: Dobbelttryk',
@@ -248,7 +251,7 @@ const RK_I18N = {
     one_light: '1 lys',
     n_lights: '{n} lys',
     error_area: 'Vælg venligst et område eller indtast et navn.',
-    card_description: 'Rumoversigt med auto-discovery pr. område, lysfarve-accent, konfigurerbar tænd/sluk-knap, sorterbare sensor-chips og tre layoutvarianter.',
+    card_description: 'Rumoversigt med auto-discovery pr. område, lysfarve-accent, konfigurerbar tænd/sluk-knap, sorterbare sensor-chips og layoutvarianter.',
   },
   no: {
     area: 'Område',
@@ -260,6 +263,7 @@ const RK_I18N = {
     variant_badge: 'Teller-badge på strømknapp',
     variant_chip: 'Lys-chip i statusraden',
     variant_pur: 'Enkel – uten teller',
+    variant_compact: 'Kompakt – horisontal rad',
     tap_action: 'Kort: Trykk',
     hold_action: 'Kort: Hold',
     double_tap_action: 'Kort: Dobbelttrykk',
@@ -281,7 +285,7 @@ const RK_I18N = {
     section_design: 'Design',
     order_title: 'Chip-rekkefølge',
     order_hint: 'Sorter med pilene – sensorer som ikke er konfigurert hoppes over automatisk.',
-    discovery_hint: 'Valg av område fyller automatisk inn lys og sensorer nedenfor – du kan endre dem når som helst.',
+    discovery_hint: 'Valg av område fyller automatisk inn lys och sensorer nedenfor – du kan endre dem når som helst.',
     order_temp: 'Temperatur',
     order_humidity: 'Luftfuktighet',
     order_co2: 'CO2',
@@ -291,7 +295,7 @@ const RK_I18N = {
     one_light: '1 lys',
     n_lights: '{n} lys',
     error_area: 'Vennligst velg et område eller oppgi et navn.',
-    card_description: 'Romoverblikk med auto-discovery per område, lysfarge-aksent, konfigurerbar strømknapp, sorterbare sensor-chips og tre layoutvarianter.',
+    card_description: 'Romoverblikk med auto-discovery per område, lysfarge-aksent, konfigurerbar strømknapp, sorterbare sensor-chips og layoutvarianter.',
   },
   fi: {
     area: 'Alue',
@@ -303,6 +307,7 @@ const RK_I18N = {
     variant_badge: 'Laskurimerkki virtapainikkeessa',
     variant_chip: 'Valosiru tilarivillä',
     variant_pur: 'Pelkistetty – ei laskuria',
+    variant_compact: 'Kompakti – vaakasuora rivi',
     tap_action: 'Kortti: Napauta',
     hold_action: 'Kortti: Pidä painettuna',
     double_tap_action: 'Kortti: Kaksoisnapauta',
@@ -334,7 +339,7 @@ const RK_I18N = {
     one_light: '1 valo',
     n_lights: '{n} valoa',
     error_area: 'Valitse alue tai anna nimi.',
-    card_description: 'Huonenäkymä automaattisella aluehavainnoinnilla, valon värikorostuksella, muokattavalla virtapainikkeella, järjestettävillä anturisiruilla ja kolmella asetteluvaihtoehdolla.',
+    card_description: 'Huonenäkymä automaattisella aluehavainnoinnilla, valon värikorostuksella, muokattavalla virtapainikkeella, järjestettävillä anturisiruilla ja layoutvaihtoehdoilla.',
   },
   is: {
     area: 'Svæði',
@@ -346,6 +351,7 @@ const RK_I18N = {
     variant_badge: 'Talningarmerki á aflhnappi',
     variant_chip: 'Ljósa-flaga í stöðustiku',
     variant_pur: 'Einfalt – enginn teljari',
+    variant_compact: 'Þjappað – lárétt röð',
     tap_action: 'Spjald: Ýta',
     hold_action: 'Spjald: Halda',
     double_tap_action: 'Spjald: Tvíýta',
@@ -377,7 +383,7 @@ const RK_I18N = {
     one_light: '1 ljós',
     n_lights: '{n} ljós',
     error_area: 'Vinsamlegast veldu svæði eða skráðu heiti.',
-    card_description: 'Herbergisyfirlit með sjálfvirkri svæðagreiningu, ljóslitaskreytingu, stillanlegum aflhnappi, röðanlegum skynjaraflögum og þremur útlitsútgáfum.',
+    card_description: 'Herbergisyfirlit með sjálfvirkri svæðagreiningu, ljóslitaskreytingu, stillanlegum aflhnappi, röðanlegum skynjaraflögum og útlitsútgáfum.',
   },
 };
 
@@ -489,8 +495,15 @@ class NavRoomCard extends HTMLElement {
     if (this._statesChanged(old, hass)) this._update();
   }
 
-  getCardSize() { return 2; }
-  getGridOptions() { return { columns: 6, rows: 2, min_columns: 4, min_rows: 2 }; }
+  getCardSize() {
+    return this._c && this._c.variant === 'compact' ? 1 : 2;
+  }
+  getGridOptions() {
+    if (this._c && this._c.variant === 'compact') {
+      return { columns: 12, rows: 1, min_columns: 4, min_rows: 1 };
+    }
+    return { columns: 6, rows: 2, min_columns: 4, min_rows: 2 };
+  }
 
   _discover() {
     const hass = this._hass;
@@ -538,25 +551,29 @@ class NavRoomCard extends HTMLElement {
 
   _build() {
     const c = this._c;
+    const isCompact = c.variant === 'compact';
     const chipIcon = Math.round(c.chip_font + 3);
-    // Theme-adaptive defaults: only force values the user explicitly configured
     const radius = this._userKeys.has('radius')
       ? `${c.radius}px`
       : 'var(--ha-card-border-radius, 12px)';
+    const cardHeight = isCompact
+      ? (this._userKeys.has('height') ? `${c.height}px` : '58px')
+      : `${c.height}px`;
+    const cardPad = isCompact
+      ? (this._userKeys.has('padding') ? `${c.padding}px` : '8px 14px 8px 12px')
+      : `${c.padding}px`;
+
     this.shadowRoot.innerHTML = `
       <style>
         :host { display: block; }
         ha-card {
           position: relative;
-          height: ${c.height}px;
-          padding: ${c.padding}px;
+          height: ${cardHeight};
+          padding: ${cardPad};
           border-radius: ${radius};
           border: var(--ha-card-border-width, 0px) solid var(--ha-card-border-color, transparent);
           box-shadow: var(--ha-card-box-shadow, none);
           box-sizing: border-box;
-          display: grid;
-          grid-template-rows: ${c.head_height}px 1fr auto;
-          row-gap: ${c.row_gap}px;
           cursor: pointer;
           overflow: hidden;
           -webkit-tap-highlight-color: transparent;
@@ -571,10 +588,68 @@ class NavRoomCard extends HTMLElement {
             linear-gradient(0deg, rgba(var(--rk-accent), ${c.bg_tint}), rgba(var(--rk-accent), ${c.bg_tint})),
             var(--ha-card-background, var(--card-background-color));
         }
+
+        /* --- Standard Grid Elements --- */
+        ha-card:not(.compact) {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          grid-template-rows: ${c.head_height}px 1fr auto;
+          row-gap: ${c.row_gap}px;
+        }
+        ha-card:not(.compact) .head {
+          grid-column: 1;
+          grid-row: 1;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+        }
+        ha-card:not(.compact) #pwr {
+          grid-column: 2;
+          grid-row: 1;
+          align-self: center;
+          justify-self: end;
+        }
+        ha-card:not(.compact) .info-wrap {
+          grid-column: 1 / span 2;
+          grid-row: 2 / span 2;
+          display: contents;
+        }
+        ha-card:not(.compact) #name {
+          grid-column: 1 / span 2;
+          grid-row: 2;
+          align-self: end;
+          font-size: ${c.name_size}px;
+          font-weight: ${c.name_weight};
+          color: var(--primary-text-color);
+          margin-bottom: 2px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        ha-card:not(.compact) #chips {
+          grid-column: 1 / span 2;
+          grid-row: 3;
+          display: flex;
+          align-items: center;
+          gap: ${c.chip_gap}px;
+          min-height: ${c.chip_height}px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          margin-right: -${c.padding}px;
+          padding-right: ${c.padding}px;
+        }
+
         .head {
           display: flex;
           align-items: center;
-          justify-content: space-between;
+        }
+        .ic-wrap {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
         }
         #ic {
           --mdc-icon-size: ${c.icon_size}px;
@@ -624,28 +699,7 @@ class NavRoomCard extends HTMLElement {
           box-shadow: 0 2px 6px rgba(0,0,0,0.35);
         }
         #badge.show { display: flex; }
-        #name {
-          align-self: end;
-          font-size: ${c.name_size}px;
-          font-weight: ${c.name_weight};
-          color: var(--primary-text-color);
-          margin-bottom: 2px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        #chips {
-          display: flex;
-          align-items: center;
-          gap: ${c.chip_gap}px;
-          min-height: ${c.chip_height}px;
-          overflow-x: auto;
-          overflow-y: hidden;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-          margin-right: -${c.padding}px;
-          padding-right: ${c.padding}px;
-        }
+
         #chips::-webkit-scrollbar { display: none; }
         .chip {
           flex: 0 0 auto;
@@ -680,20 +734,118 @@ class NavRoomCard extends HTMLElement {
           color: #ff7043;
           background: rgba(255, 112, 67, 0.18);
         }
+
+        /* --- Compact Variant (Horizontal Row Layout) --- */
+        ha-card.compact {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          border-left: 4px solid rgb(var(--rk-accent));
+        }
+        ha-card.compact .head {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+          margin-right: 12px;
+        }
+        ha-card.compact .ic-wrap {
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: var(--rk-neutral);
+          transition: background .25s ease;
+        }
+        ha-card.compact.on .ic-wrap {
+          background: rgba(var(--rk-accent), 0.16);
+        }
+        ha-card.compact #ic {
+          --mdc-icon-size: 20px;
+        }
+        ha-card.compact .info-wrap {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          flex: 1 1 auto;
+          min-width: 0;
+          gap: 2px;
+        }
+        ha-card.compact #name {
+          align-self: flex-start;
+          font-size: ${this._userKeys.has('name_size') ? c.name_size : 15}px;
+          font-weight: ${c.name_weight};
+          color: var(--primary-text-color);
+          margin-bottom: 0;
+          line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        ha-card.compact #chips {
+          display: flex;
+          align-items: center;
+          min-height: auto;
+          gap: 6px;
+          margin-right: 0;
+          padding-right: 0;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scrollbar-width: none;
+        }
+        ha-card.compact .chip {
+          height: 18px;
+          padding: 0;
+          font-size: 11px;
+          font-weight: 500;
+          gap: 3px;
+          background: transparent;
+          color: var(--secondary-text-color);
+        }
+        ha-card.compact .chip:not(:last-child)::after {
+          content: "•";
+          margin-left: 6px;
+          color: var(--disabled-text-color, rgba(128,128,128,0.5));
+        }
+        ha-card.compact .chip ha-icon {
+          --mdc-icon-size: 13px;
+          margin-left: 0;
+        }
+        ha-card.compact #pwr {
+          flex: 0 0 auto;
+          margin-left: 10px;
+          width: ${this._userKeys.has('pwr_size') ? c.pwr_size : 34}px;
+          height: ${this._userKeys.has('pwr_size') ? c.pwr_size : 34}px;
+        }
+        ha-card.compact #pwr ha-icon {
+          --mdc-icon-size: ${this._userKeys.has('pwr_icon') ? c.pwr_icon : 18}px;
+        }
+        ha-card.compact #badge {
+          top: -3px;
+          right: -3px;
+          min-width: 16px;
+          height: 16px;
+          font-size: 10px;
+        }
+
         @media (prefers-reduced-motion: reduce) {
           ha-card, #pwr, #ic, .chip { transition: none; }
         }
       </style>
-      <ha-card>
+      <ha-card class="${c.variant}">
         <div class="head">
-          <ha-icon id="ic"></ha-icon>
-          <button id="pwr" aria-label="Toggle light">
-            <ha-icon icon="mdi:power"></ha-icon>
-            <span id="badge"></span>
-          </button>
+          <div class="ic-wrap">
+            <ha-icon id="ic"></ha-icon>
+          </div>
         </div>
-        <div id="name"></div>
-        <div id="chips"></div>
+        <div class="info-wrap">
+          <div id="name"></div>
+          <div id="chips"></div>
+        </div>
+        <button id="pwr" aria-label="Toggle light">
+          <ha-icon icon="mdi:power"></ha-icon>
+          <span id="badge"></span>
+        </button>
       </ha-card>
     `;
 
@@ -865,10 +1017,10 @@ class NavRoomCard extends HTMLElement {
     el.card.style.setProperty('--rk-accent', accent);
     el.card.classList.toggle('on', on);
 
-    // Power button & badge (badge only in "badge" variant)
+    // Power button & badge (badge in "badge" and "compact" variants)
     el.pwr.classList.toggle('show', !!eff.light);
     el.badge.textContent = String(count);
-    el.badge.classList.toggle('show', c.variant === 'badge' && count > 0);
+    el.badge.classList.toggle('show', (c.variant === 'badge' || c.variant === 'compact') && count > 0);
 
     // Chips: build and sort by configured order
     const defs = {};
@@ -957,6 +1109,7 @@ function rkBuildSchema(hass) {
                 { value: 'badge', label: rkT(hass, 'variant_badge') },
                 { value: 'chip', label: rkT(hass, 'variant_chip') },
                 { value: 'pur', label: rkT(hass, 'variant_pur') },
+                { value: 'compact', label: rkT(hass, 'variant_compact') },
               ],
             },
           },
