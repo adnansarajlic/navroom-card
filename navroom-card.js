@@ -824,7 +824,6 @@ class NavRoomCard extends HTMLElement {
           flex-direction: row;
           align-items: center;
           justify-content: space-between;
-          border-left: 4px solid rgb(var(--rk-border-accent, var(--rk-accent)));
         }
         ha-card.variant-compact .head {
           display: flex;
@@ -1375,38 +1374,6 @@ class NavRoomCardEditor extends HTMLElement {
           color: var(--primary-color);
         }
         .rk-reset button ha-icon { --mdc-icon-size: 16px; }
-
-        .rk-color-picker {
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          appearance: none;
-          width: 26px;
-          height: 26px;
-          border: 2px solid var(--divider-color, rgba(255,255,255,0.25));
-          border-radius: 50%;
-          cursor: pointer;
-          background: transparent;
-          padding: 0;
-          margin-right: 6px;
-          vertical-align: middle;
-          outline: none;
-          transition: transform .15s ease, border-color .15s ease;
-        }
-        .rk-color-picker:hover {
-          transform: scale(1.1);
-          border-color: var(--primary-color);
-        }
-        .rk-color-picker::-webkit-color-swatch-wrapper {
-          padding: 0;
-        }
-        .rk-color-picker::-webkit-color-swatch {
-          border: none;
-          border-radius: 50%;
-        }
-        .rk-color-picker::-moz-color-swatch {
-          border: none;
-          border-radius: 50%;
-        }
       `;
       this.appendChild(style);
 
@@ -1487,11 +1454,16 @@ class NavRoomCardEditor extends HTMLElement {
     if (!this._form) return;
     const colorKeys = ['accent_color', 'accent_border', 'accent_fallback'];
 
-    const scan = (root) => {
+    // Clean up any stray detached pickers in light DOM
+    this._form.querySelectorAll('.rk-color-picker').forEach((p) => p.remove());
+
+    const processedTfs = new Set();
+
+    const findFields = (root) => {
       if (!root) return;
-      const elements = root.querySelectorAll ? Array.from(root.querySelectorAll('*')) : [];
-      elements.forEach((el) => {
-        if (el.shadowRoot) scan(el.shadowRoot);
+      const all = root.querySelectorAll ? Array.from(root.querySelectorAll('*')) : [];
+      all.forEach((el) => {
+        if (el.shadowRoot) findFields(el.shadowRoot);
 
         let key = null;
         if (el.schema && colorKeys.includes(el.schema.name)) {
@@ -1501,50 +1473,98 @@ class NavRoomCardEditor extends HTMLElement {
         }
 
         if (key) {
-          const target = el.shadowRoot
-            ? el.shadowRoot.querySelector('ha-textfield') || el.shadowRoot.querySelector('input') || el
-            : el.querySelector('ha-textfield') || el.querySelector('input') || el;
-
-          const container = target.tagName && target.tagName.toLowerCase() === 'ha-textfield'
-            ? target
-            : target.parentElement || target;
-
-          let picker = container.querySelector('.rk-color-picker');
-          const currentVal = this._config[key] || (key === 'accent_fallback' ? RK_DEFAULTS.accent_fallback : '');
-          const hexVal = rkColorToHex(currentVal);
-
-          if (!picker) {
-            picker = document.createElement('input');
-            picker.type = 'color';
-            picker.className = 'rk-color-picker';
-            picker.slot = 'trailingIcon';
-            picker.title = 'Color picker';
-            picker.value = hexVal;
-
-            const onColorInput = (ev) => {
-              ev.stopPropagation();
-              const hex = ev.target.value;
-              const newConfig = { ...this._config, [key]: hex };
-              this._fireConfig(newConfig);
-              this._render();
-            };
-
-            picker.addEventListener('input', onColorInput);
-            picker.addEventListener('change', onColorInput);
-
-            if (target.tagName && target.tagName.toLowerCase() === 'ha-textfield') {
-              target.appendChild(picker);
-            } else if (target.parentElement) {
-              target.parentElement.appendChild(picker);
-            }
+          // Find the single ha-textfield inside this selector
+          let tf = null;
+          if (el.tagName && el.tagName.toLowerCase() === 'ha-textfield') {
+            tf = el;
+          } else if (el.shadowRoot) {
+            tf = el.shadowRoot.querySelector('ha-textfield');
           } else {
-            picker.value = hexVal;
+            tf = el.querySelector('ha-textfield');
+          }
+
+          if (tf && !processedTfs.has(tf)) {
+            processedTfs.add(tf);
+
+            // Clean up any duplicate pickers inside this tf
+            const existing = tf.querySelectorAll('.rk-color-picker');
+            existing.forEach((p, idx) => { if (idx > 0) p.remove(); });
+
+            let picker = tf.querySelector('.rk-color-picker');
+            const currentVal = this._config[key] || (key === 'accent_fallback' ? RK_DEFAULTS.accent_fallback : '');
+            const hexVal = rkColorToHex(currentVal);
+
+            // Inject swatch CSS into tf's root node if not already present
+            const rootNode = tf.getRootNode ? tf.getRootNode() : null;
+            if (rootNode && !rootNode.querySelector?.('#rk-swatch-style')) {
+              const st = document.createElement('style');
+              st.id = 'rk-swatch-style';
+              st.textContent = `
+                .rk-color-picker {
+                  -webkit-appearance: none !important;
+                  -moz-appearance: none !important;
+                  appearance: none !important;
+                  width: 24px !important;
+                  height: 24px !important;
+                  min-width: 24px !important;
+                  min-height: 24px !important;
+                  max-width: 24px !important;
+                  max-height: 24px !important;
+                  border: 2px solid rgba(255,255,255,0.4) !important;
+                  border-radius: 50% !important;
+                  cursor: pointer !important;
+                  background: transparent !important;
+                  padding: 0 !important;
+                  margin: 0 !important;
+                  outline: none !important;
+                  box-sizing: border-box !important;
+                }
+                .rk-color-picker::-webkit-color-swatch-wrapper {
+                  padding: 0 !important;
+                  border-radius: 50% !important;
+                }
+                .rk-color-picker::-webkit-color-swatch {
+                  border: none !important;
+                  border-radius: 50% !important;
+                }
+                .rk-color-picker::-moz-color-swatch {
+                  border: none !important;
+                  border-radius: 50% !important;
+                }
+              `;
+              if (rootNode === document) document.head.appendChild(st);
+              else rootNode.appendChild(st);
+            }
+
+            if (!picker) {
+              picker = document.createElement('input');
+              picker.type = 'color';
+              picker.className = 'rk-color-picker';
+              picker.slot = 'trailingIcon';
+              picker.title = 'Color picker';
+              picker.value = hexVal;
+
+              const onColorInput = (ev) => {
+                ev.stopPropagation();
+                const hex = ev.target.value;
+                if (tf.value !== undefined) tf.value = hex;
+                const newConfig = { ...this._config, [key]: hex };
+                this._fireConfig(newConfig);
+              };
+
+              picker.addEventListener('input', onColorInput);
+              picker.addEventListener('change', onColorInput);
+
+              tf.appendChild(picker);
+            } else {
+              picker.value = hexVal;
+            }
           }
         }
       });
     };
 
-    scan(this._form.shadowRoot || this._form);
+    findFields(this._form.shadowRoot || this._form);
   }
 
   /* Pre-fill the pickers when the editor opens with an area but no entities
