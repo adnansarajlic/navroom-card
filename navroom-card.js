@@ -432,7 +432,11 @@ function rkT(hass, key) {
 }
 
 function rkParseColor(val) {
-  if (!val || typeof val !== 'string') return null;
+  if (!val) return null;
+  if (Array.isArray(val) && val.length >= 3) {
+    return `${val[0]},${val[1]},${val[2]}`;
+  }
+  if (typeof val !== 'string') return null;
   val = val.trim();
   if (!val) return null;
   if (/^\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}$/.test(val)) {
@@ -457,6 +461,15 @@ function rkParseColor(val) {
     }
   }
   return null;
+}
+
+function rkColorToHex(val) {
+  const parsed = rkParseColor(val);
+  if (!parsed) return '#ffb74d';
+  const parts = parsed.split(',').map((n) => parseInt(n.trim(), 10));
+  if (parts.length < 3 || parts.some(isNaN)) return '#ffb74d';
+  const toHex = (c) => Math.max(0, Math.min(255, c)).toString(16).padStart(2, '0');
+  return `#${toHex(parts[0])}${toHex(parts[1])}${toHex(parts[2])}`;
 }
 
 /* -------------------- Auto-discovery (shared) -------------------- */
@@ -1362,6 +1375,38 @@ class NavRoomCardEditor extends HTMLElement {
           color: var(--primary-color);
         }
         .rk-reset button ha-icon { --mdc-icon-size: 16px; }
+
+        .rk-color-picker {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          width: 26px;
+          height: 26px;
+          border: 2px solid var(--divider-color, rgba(255,255,255,0.25));
+          border-radius: 50%;
+          cursor: pointer;
+          background: transparent;
+          padding: 0;
+          margin-right: 6px;
+          vertical-align: middle;
+          outline: none;
+          transition: transform .15s ease, border-color .15s ease;
+        }
+        .rk-color-picker:hover {
+          transform: scale(1.1);
+          border-color: var(--primary-color);
+        }
+        .rk-color-picker::-webkit-color-swatch-wrapper {
+          padding: 0;
+        }
+        .rk-color-picker::-webkit-color-swatch {
+          border: none;
+          border-radius: 50%;
+        }
+        .rk-color-picker::-moz-color-swatch {
+          border: none;
+          border-radius: 50%;
+        }
       `;
       this.appendChild(style);
 
@@ -1390,6 +1435,15 @@ class NavRoomCardEditor extends HTMLElement {
         this._fireConfig(config);
       });
       this.appendChild(this._form);
+
+      const observeForm = () => {
+        const root = this._form.shadowRoot || this._form;
+        if (root && !this._obs) {
+          this._obs = new MutationObserver(() => this._attachColorPickers());
+          this._obs.observe(root, { childList: true, subtree: true });
+        }
+      };
+      setTimeout(observeForm, 50);
 
       this._orderBox = document.createElement('div');
       this._orderBox.className = 'rk-order';
@@ -1426,6 +1480,71 @@ class NavRoomCardEditor extends HTMLElement {
     this._form.schema = rkBuildSchema(this._hass);
     this._maybeMaterialize();
     this._renderOrder();
+    setTimeout(() => this._attachColorPickers(), 50);
+  }
+
+  _attachColorPickers() {
+    if (!this._form) return;
+    const colorKeys = ['accent_color', 'accent_border', 'accent_fallback'];
+
+    const scan = (root) => {
+      if (!root) return;
+      const elements = root.querySelectorAll ? Array.from(root.querySelectorAll('*')) : [];
+      elements.forEach((el) => {
+        if (el.shadowRoot) scan(el.shadowRoot);
+
+        let key = null;
+        if (el.schema && colorKeys.includes(el.schema.name)) {
+          key = el.schema.name;
+        } else if (el.getAttribute && colorKeys.includes(el.getAttribute('name'))) {
+          key = el.getAttribute('name');
+        }
+
+        if (key) {
+          const target = el.shadowRoot
+            ? el.shadowRoot.querySelector('ha-textfield') || el.shadowRoot.querySelector('input') || el
+            : el.querySelector('ha-textfield') || el.querySelector('input') || el;
+
+          const container = target.tagName && target.tagName.toLowerCase() === 'ha-textfield'
+            ? target
+            : target.parentElement || target;
+
+          let picker = container.querySelector('.rk-color-picker');
+          const currentVal = this._config[key] || (key === 'accent_fallback' ? RK_DEFAULTS.accent_fallback : '');
+          const hexVal = rkColorToHex(currentVal);
+
+          if (!picker) {
+            picker = document.createElement('input');
+            picker.type = 'color';
+            picker.className = 'rk-color-picker';
+            picker.slot = 'trailingIcon';
+            picker.title = 'Color picker';
+            picker.value = hexVal;
+
+            const onColorInput = (ev) => {
+              ev.stopPropagation();
+              const hex = ev.target.value;
+              const newConfig = { ...this._config, [key]: hex };
+              this._fireConfig(newConfig);
+              this._render();
+            };
+
+            picker.addEventListener('input', onColorInput);
+            picker.addEventListener('change', onColorInput);
+
+            if (target.tagName && target.tagName.toLowerCase() === 'ha-textfield') {
+              target.appendChild(picker);
+            } else if (target.parentElement) {
+              target.parentElement.appendChild(picker);
+            }
+          } else {
+            picker.value = hexVal;
+          }
+        }
+      });
+    };
+
+    scan(this._form.shadowRoot || this._form);
   }
 
   /* Pre-fill the pickers when the editor opens with an area but no entities
