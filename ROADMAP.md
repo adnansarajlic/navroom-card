@@ -39,7 +39,21 @@ This document tracks planned features, community requests, and future architectu
 
 ---
 
-### 4. 🚪 Extended Door, Window & Climate State Integration
+### 4. 🗂️ Config Editor Schema Re-categorization
+* **Goal:** Reorganize the Lovelace visual editor schema (`rkBuildSchema`) into cleaner, logically grouped expandable sections to improve usability as features grow.
+* **Proposed Structure:**
+  - **Room & Entities** (Always visible): Area selection, Light group/single entity, and Sensor entities (Temp, Humidity, CO2, Smoke).
+  - **Appearance**: Layout variant selector (`badge`, `chip`, `pur`, `compact`), left accent border toggle, and status chip sort list.
+  - **Colors**: Integrated color pickers for custom accent color, border color, fallback color, and background tint slider.
+  - **Sizes & Spacing**: Sliders for card height, corner radius, font size overrides, power button dimensions, etc.
+  - **Name & Icon**: Text inputs for custom name override and custom icon override.
+  - **Interactions**: Tap, hold, double tap, and power button action configuration.
+* **Priority:** Medium
+* **Status:** 💡 Specified & Pending Implementation
+
+---
+
+### 5. 🚪 Extended Door, Window & Climate State Integration
 * **Goal:** Support summary badges for open doors/windows within the area (e.g. `1 open`) or active HVAC states.
 * **Priority:** Low / Backlog
 * **Status:** 💡 Backlog
