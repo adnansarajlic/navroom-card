@@ -1453,11 +1453,7 @@ class NavRoomCardEditor extends HTMLElement {
   _attachColorPickers() {
     if (!this._form) return;
     const colorKeys = ['accent_color', 'accent_border', 'accent_fallback'];
-
-    // Clean up any stray detached pickers in light DOM
-    this._form.querySelectorAll('.rk-color-picker').forEach((p) => p.remove());
-
-    const processedTfs = new Set();
+    const processedKeys = new Set();
 
     const findFields = (root) => {
       if (!root) return;
@@ -1472,93 +1468,78 @@ class NavRoomCardEditor extends HTMLElement {
           key = el.getAttribute('name');
         }
 
-        if (key) {
-          // Find the single ha-textfield inside this selector
-          let tf = null;
-          if (el.tagName && el.tagName.toLowerCase() === 'ha-textfield') {
-            tf = el;
-          } else if (el.shadowRoot) {
-            tf = el.shadowRoot.querySelector('ha-textfield');
-          } else {
-            tf = el.querySelector('ha-textfield');
+        if (key && !processedKeys.has(key)) {
+          const tf = (el.shadowRoot ? el.shadowRoot.querySelector('ha-textfield') : null) ||
+                     el.querySelector('ha-textfield') || el;
+
+          const container = tf.parentElement || (el.shadowRoot ? el.shadowRoot : el);
+          if (!container) return;
+          processedKeys.add(key);
+
+          // Clean up any duplicate pickers
+          container.querySelectorAll('.rk-color-picker').forEach((p, idx) => { if (idx > 0) p.remove(); });
+
+          container.style.position = 'relative';
+
+          // Inject swatch CSS into rootNode if not present
+          const rootNode = container.getRootNode ? container.getRootNode() : document;
+          if (rootNode && !rootNode.querySelector?.('#rk-swatch-style')) {
+            const st = document.createElement('style');
+            st.id = 'rk-swatch-style';
+            st.textContent = `
+              .rk-color-picker::-webkit-color-swatch-wrapper { padding: 0 !important; border-radius: 50% !important; }
+              .rk-color-picker::-webkit-color-swatch { border: none !important; border-radius: 50% !important; }
+              .rk-color-picker::-moz-color-swatch { border: none !important; border-radius: 50% !important; }
+            `;
+            if (rootNode === document || !rootNode.appendChild) document.head.appendChild(st);
+            else rootNode.appendChild(st);
           }
 
-          if (tf && !processedTfs.has(tf)) {
-            processedTfs.add(tf);
+          let picker = container.querySelector('.rk-color-picker');
+          const currentVal = this._config[key] || (key === 'accent_fallback' ? RK_DEFAULTS.accent_fallback : '');
+          const hexVal = rkColorToHex(currentVal);
 
-            // Clean up any duplicate pickers inside this tf
-            const existing = tf.querySelectorAll('.rk-color-picker');
-            existing.forEach((p, idx) => { if (idx > 0) p.remove(); });
+          if (!picker) {
+            picker = document.createElement('input');
+            picker.type = 'color';
+            picker.className = 'rk-color-picker';
+            picker.title = 'Color picker';
+            picker.value = hexVal;
+            picker.style.cssText = `
+              -webkit-appearance: none;
+              -moz-appearance: none;
+              appearance: none;
+              position: absolute;
+              right: 12px;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 26px;
+              height: 26px;
+              border: 2px solid rgba(255, 255, 255, 0.4);
+              border-radius: 50%;
+              cursor: pointer;
+              background: transparent;
+              padding: 0;
+              margin: 0;
+              outline: none;
+              box-sizing: border-box;
+              z-index: 10;
+            `;
 
-            let picker = tf.querySelector('.rk-color-picker');
-            const currentVal = this._config[key] || (key === 'accent_fallback' ? RK_DEFAULTS.accent_fallback : '');
-            const hexVal = rkColorToHex(currentVal);
+            const onColorInput = (ev) => {
+              ev.stopPropagation();
+              const hex = ev.target.value;
+              if (tf && tf.value !== undefined) tf.value = hex;
+              const newConfig = { ...this._config, [key]: hex };
+              this._fireConfig(newConfig);
+            };
 
-            // Inject swatch CSS into tf's root node if not already present
-            const rootNode = tf.getRootNode ? tf.getRootNode() : null;
-            if (rootNode && !rootNode.querySelector?.('#rk-swatch-style')) {
-              const st = document.createElement('style');
-              st.id = 'rk-swatch-style';
-              st.textContent = `
-                .rk-color-picker {
-                  -webkit-appearance: none !important;
-                  -moz-appearance: none !important;
-                  appearance: none !important;
-                  width: 24px !important;
-                  height: 24px !important;
-                  min-width: 24px !important;
-                  min-height: 24px !important;
-                  max-width: 24px !important;
-                  max-height: 24px !important;
-                  border: 2px solid rgba(255,255,255,0.4) !important;
-                  border-radius: 50% !important;
-                  cursor: pointer !important;
-                  background: transparent !important;
-                  padding: 0 !important;
-                  margin: 0 !important;
-                  outline: none !important;
-                  box-sizing: border-box !important;
-                }
-                .rk-color-picker::-webkit-color-swatch-wrapper {
-                  padding: 0 !important;
-                  border-radius: 50% !important;
-                }
-                .rk-color-picker::-webkit-color-swatch {
-                  border: none !important;
-                  border-radius: 50% !important;
-                }
-                .rk-color-picker::-moz-color-swatch {
-                  border: none !important;
-                  border-radius: 50% !important;
-                }
-              `;
-              if (rootNode === document) document.head.appendChild(st);
-              else rootNode.appendChild(st);
-            }
+            picker.addEventListener('input', onColorInput);
+            picker.addEventListener('change', onColorInput);
 
-            if (!picker) {
-              picker = document.createElement('input');
-              picker.type = 'color';
-              picker.className = 'rk-color-picker';
-              picker.slot = 'trailingIcon';
-              picker.title = 'Color picker';
-              picker.value = hexVal;
-
-              const onColorInput = (ev) => {
-                ev.stopPropagation();
-                const hex = ev.target.value;
-                if (tf.value !== undefined) tf.value = hex;
-                const newConfig = { ...this._config, [key]: hex };
-                this._fireConfig(newConfig);
-              };
-
-              picker.addEventListener('input', onColorInput);
-              picker.addEventListener('change', onColorInput);
-
-              tf.appendChild(picker);
-            } else {
-              picker.value = hexVal;
-            }
+            container.appendChild(picker);
+          } else {
+            picker.value = hexVal;
           }
         }
       });
