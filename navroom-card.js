@@ -68,13 +68,14 @@ const RK_DEFAULTS = {
   accent_fallback: '255,183,77',
   accent_color: '',
   accent_border: '',
+  show_accent_border: null,
 };
 
 const RK_DESIGN_KEYS = [
   'height', 'radius', 'padding', 'head_height', 'row_gap', 'icon_size',
   'name_size', 'name_weight', 'chip_height', 'chip_font', 'chip_pad',
   'chip_gap', 'pwr_size', 'pwr_icon', 'badge_size', 'bg_tint',
-  'accent_fallback', 'accent_color', 'accent_border', 'chip_order',
+  'accent_fallback', 'accent_color', 'accent_border', 'show_accent_border', 'chip_order',
 ];
 const RK_VARIANTS = ['badge', 'chip', 'pur', 'compact'];
 const RK_CHIP_ORDER_DEFAULT = ['temp', 'humidity', 'co2', 'light'];
@@ -105,6 +106,7 @@ const RK_I18N = {
     icon: 'Override icon',
     accent_color: 'Override accent color',
     accent_border: 'Left accent border color',
+    show_accent_border: 'Show left accent line',
     height: 'Card height',
     radius: 'Corner radius',
     icon_size: 'Icon size',
@@ -151,6 +153,7 @@ const RK_I18N = {
     icon: 'Icon überschreiben',
     accent_color: 'Akzentfarbe überschreiben',
     accent_border: 'Farbe des linken Akzentstreifens',
+    show_accent_border: 'Linke Akzentlinie anzeigen',
     height: 'Kartenhöhe',
     radius: 'Eckenradius',
     icon_size: 'Icongröße',
@@ -197,6 +200,7 @@ const RK_I18N = {
     icon: 'Åsidosätt ikon',
     accent_color: 'Åsidosätt accentfärg',
     accent_border: 'Vänster accentlinjefärg',
+    show_accent_border: 'Visa vänster accentlinje',
     height: 'Korthöjd',
     radius: 'Hörnradie',
     icon_size: 'Ikonstorlek',
@@ -243,6 +247,7 @@ const RK_I18N = {
     icon: 'Tilsidesæt ikon',
     accent_color: 'Tilsidesæt accentfarve',
     accent_border: 'Venstre accentstribefarve',
+    show_accent_border: 'Vis venstre accentlinje',
     height: 'Korthøjde',
     radius: 'Hjørneradius',
     icon_size: 'Ikonstørrelse',
@@ -289,6 +294,7 @@ const RK_I18N = {
     icon: 'Overstyr ikon',
     accent_color: 'Overstyr aksentfarge',
     accent_border: 'Venstre aksentlinjefarge',
+    show_accent_border: 'Vis venstre aksentlinje',
     height: 'Korthøyde',
     radius: 'Hjørneradius',
     icon_size: 'Ikonstørrelse',
@@ -335,6 +341,7 @@ const RK_I18N = {
     icon: 'Korvaa kuvake',
     accent_color: 'Ohita korostusväri',
     accent_border: 'Vasemman korostusviivan väri',
+    show_accent_border: 'Näytä vasen korostusviiva',
     height: 'Kortin korkeus',
     radius: 'Kulman säde',
     icon_size: 'Kuvakekoko',
@@ -381,6 +388,7 @@ const RK_I18N = {
     icon: 'Hnekkja tákni',
     accent_color: 'Hnekkja áherslulit',
     accent_border: 'Litur vinstri áherslustiku',
+    show_accent_border: 'Sýna vinstri áherslustiku',
     height: 'Hæð spjalds',
     radius: 'Hornaradíus',
     icon_size: 'Táknstærð',
@@ -629,9 +637,12 @@ class NavRoomCard extends HTMLElement {
           overflow: hidden;
           -webkit-tap-highlight-color: transparent;
           user-select: none;
-          transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .3s ease;
+          transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .3s ease, border-left .25s ease;
           --rk-accent: ${c.accent_fallback};
           --rk-neutral: rgba(255,255,255,0.08);
+        }
+        ha-card.has-accent-border {
+          border-left: 4px solid rgb(var(--rk-border-accent, var(--rk-accent)));
         }
         ha-card:active { transform: scale(0.965); }
         ha-card.on {
@@ -666,101 +677,109 @@ class NavRoomCard extends HTMLElement {
           display: contents;
         }
         ha-card:not(.variant-compact) #name {
-          grid-column: 1 / span 2;
+          grid-column: 1 / -1;
           grid-row: 2;
-          align-self: end;
+          align-self: center;
           font-size: ${c.name_size}px;
           font-weight: ${c.name_weight};
           color: var(--primary-text-color);
           margin-bottom: 2px;
+          line-height: 1.2;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         ha-card:not(.variant-compact) #chips {
-          grid-column: 1 / span 2;
+          grid-column: 1 / -1;
           grid-row: 3;
           display: flex;
           align-items: center;
-          gap: ${c.chip_gap}px;
           min-height: ${c.chip_height}px;
+          gap: ${c.chip_gap}px;
+          margin-right: -4px;
+          padding-right: 4px;
           overflow-x: auto;
           overflow-y: hidden;
           scrollbar-width: none;
-          -ms-overflow-style: none;
-          margin-right: -${c.padding}px;
-          padding-right: ${c.padding}px;
         }
 
         .head {
-          display: flex;
-          align-items: center;
+          position: relative;
         }
         .ic-wrap {
-          position: relative;
-          display: inline-flex;
+          display: flex;
           align-items: center;
           justify-content: center;
         }
         #ic {
           --mdc-icon-size: ${c.icon_size}px;
           color: var(--secondary-text-color);
-          transition: color .3s ease;
+          transition: color .25s ease;
         }
-        ha-card.on #ic { color: rgb(var(--rk-accent)); }
+        ha-card.on #ic {
+          color: rgb(var(--rk-accent));
+        }
+
         #pwr {
+          display: none;
           position: relative;
+          align-items: center;
+          justify-content: center;
           width: ${c.pwr_size}px;
           height: ${c.pwr_size}px;
           border-radius: 50%;
           border: none;
+          outline: none;
           padding: 0;
-          display: none;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
           background: var(--rk-neutral);
-          box-shadow: var(--rk-pwr-shadow, none);
-          transition: transform .15s ease, background .25s ease, box-shadow .25s ease;
+          box-shadow: var(--rk-pwr-shadow);
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+          transition: background .25s ease, transform .12s ease, box-shadow .25s ease;
         }
-        #pwr.show { display: flex; }
+        #pwr.show { display: inline-flex; }
         #pwr:active { transform: scale(0.90); }
         #pwr ha-icon {
           --mdc-icon-size: ${c.pwr_icon}px;
           color: var(--secondary-text-color);
           transition: color .25s ease;
         }
-        ha-card.on #pwr { background: rgba(var(--rk-accent), 0.20); }
-        ha-card.on #pwr ha-icon { color: rgb(var(--rk-accent)); }
+        ha-card.on #pwr {
+          background: rgba(var(--rk-accent), 0.22);
+        }
+        ha-card.on #pwr ha-icon {
+          color: rgb(var(--rk-accent));
+        }
+
         #badge {
+          display: none;
           position: absolute;
-          top: -4px;
-          right: -4px;
+          top: -2px;
+          right: -2px;
           min-width: ${c.badge_size}px;
           height: ${c.badge_size}px;
-          padding: 0 5px;
+          padding: 0 4px;
+          box-sizing: border-box;
           border-radius: 999px;
           background: rgb(var(--rk-accent));
-          color: #241a08;
-          font: 800 ${Math.round(c.badge_size * 0.61)}px/1 Roboto, sans-serif;
-          display: none;
+          color: #fff;
+          font-size: 11px;
+          font-weight: 700;
+          line-height: 1;
           align-items: center;
           justify-content: center;
-          box-sizing: border-box;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+          pointer-events: none;
         }
-        #badge.show { display: flex; }
+        #badge.show { display: inline-flex; }
 
         #chips::-webkit-scrollbar { display: none; }
         #chips .chip {
-          flex: 0 0 auto;
           display: inline-flex;
           align-items: center;
-          justify-content: center;
-          gap: 4px;
           height: ${c.chip_height}px;
           padding: 0 ${c.chip_pad}px;
           border-radius: 999px;
+          gap: 4px;
           font-size: ${c.chip_font}px;
           font-weight: 600;
           line-height: 1;
@@ -1076,6 +1095,10 @@ class NavRoomCard extends HTMLElement {
 
     el.card.className = 'variant-' + c.variant;
     el.card.classList.toggle('on', on);
+    const showBorder = c.show_accent_border !== undefined && c.show_accent_border !== null
+      ? Boolean(c.show_accent_border)
+      : c.variant === 'compact';
+    el.card.classList.toggle('has-accent-border', showBorder);
 
     // Power button & badge (badge in "badge" and "compact" variants)
     el.pwr.classList.toggle('show', !!eff.light);
@@ -1199,6 +1222,7 @@ function rkBuildSchema(hass) {
             { name: 'accent_border', selector: { text: {} } },
           ],
         },
+        { name: 'show_accent_border', selector: { boolean: {} } },
       ],
     },
     {
