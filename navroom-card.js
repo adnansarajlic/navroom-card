@@ -68,7 +68,7 @@ const RK_DEFAULTS = {
   accent_fallback: '255,183,77',
   accent_color: '',
   accent_border: '',
-  show_accent_border: null,
+  show_accent_border: false,
 };
 
 const RK_DESIGN_KEYS = [
@@ -1095,10 +1095,7 @@ class NavRoomCard extends HTMLElement {
 
     el.card.className = 'variant-' + c.variant;
     el.card.classList.toggle('on', on);
-    const showBorder = c.show_accent_border !== undefined && c.show_accent_border !== null
-      ? Boolean(c.show_accent_border)
-      : c.variant === 'compact';
-    el.card.classList.toggle('has-accent-border', showBorder);
+    el.card.classList.toggle('has-accent-border', Boolean(c.show_accent_border));
 
     // Power button & badge (badge in "badge" and "compact" variants)
     el.pwr.classList.toggle('show', !!eff.light);
