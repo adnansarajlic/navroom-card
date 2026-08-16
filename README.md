@@ -41,15 +41,15 @@ Area-aware · auto-discovering · fully UI-configurable · zero dependencies
   separate action for the power button.
 - 🖥️ **Full visual editor** – area picker, filtered entity pickers, design
   sliders, reset button, live preview. Zero YAML required.
-- 🌍 **i18n** – English & German, auto-detected from the user profile.
+- 🌍 **i18n** – English, German, Swedish, Danish, Norwegian, Finnish & Icelandic, auto-detected from the user profile.
 - ⚡ **Vanilla JavaScript** – no build step, no dependencies, one file.
 
 ## 🃏 Variants
 
-| `badge` (default) | `chip` | `pur` |
-|---|---|---|
-| <picture><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-badge-light.png"><img alt="Badge variant" src="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-badge-dark.png"></picture> | <picture><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-chip-light.png"><img alt="Chip variant" src="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-chip-dark.png"></picture> | <picture><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-pur-light.png"><img alt="Plain variant" src="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-pur-dark.png"></picture> |
-| Counter badge on the power button | Lights chip in the status row | No counter at all |
+| `badge` (default) | `chip` | `pur` | `compact` |
+|---|---|---|---|
+| <picture><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-badge-light.png"><img alt="Badge variant" src="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-badge-dark.png"></picture> | <picture><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-chip-light.png"><img alt="Chip variant" src="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-chip-dark.png"></picture> | <picture><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-pur-light.png"><img alt="Plain variant" src="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-pur-dark.png"></picture> | <picture><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-badge-light.png"><img alt="Compact variant" src="https://raw.githubusercontent.com/smarthomebutbetter/navroom-card/main/navroom-variant-badge-dark.png"></picture> |
+| Counter badge on the power button | Lights chip in the status row | No counter at all | Compact horizontal row (~58px) |
 
 ## 🚀 Installation
 
